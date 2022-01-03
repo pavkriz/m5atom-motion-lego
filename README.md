@@ -1,6 +1,6 @@
 # M5Atom Motion LEGO control
 
-# Supported hardware
+## Supported hardware
 
 [M5Atom](https://docs.m5stack.com/en/core/atom_lite) with [Motion](https://docs.m5stack.com/en/atom/atom_motion) base is supported. Could be ported to another ESP32 board with motor and servo support.
 
