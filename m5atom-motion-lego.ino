@@ -63,10 +63,10 @@ void parametrizedCyclingProgram(int servoAngle1, int servoAngle2)
         Atom.SetMotorSpeed(2, -127);
     }
     int servoAngle = servoDirection ? servoAngle2 : servoAngle1;
-    for (int ch = 1; ch < 5; ch++)
-    {
-        Atom.SetServoAngle(ch, servoAngle);
-    }
+    Atom.SetServoAngle(1, servoAngle);
+    Atom.SetServoAngle(2, servoAngle2-servoAngle);  // even servos goes the other direction
+    Atom.SetServoAngle(3, servoAngle);
+    Atom.SetServoAngle(4, servoAngle2-servoAngle);  // even servos goes the other direction
 }
 
 void program0Loop()
@@ -169,10 +169,10 @@ void program3WiimoteLoop()
     Atom.SetMotorSpeed(1, 127 * wiiMotor1);
     Atom.SetMotorSpeed(2, 127 * wiiMotor2);
     int servoAngle = servoDirection ? 180 : 0;
-    for (int ch = 1; ch < 5; ch++)
-    {
-        Atom.SetServoAngle(ch, servoAngle);
-    }
+    Atom.SetServoAngle(1, servoAngle);
+    Atom.SetServoAngle(2, 180-servoAngle);  // even servos goes the other direction
+    Atom.SetServoAngle(3, servoAngle);
+    Atom.SetServoAngle(4, 180-servoAngle);  // even servos goes the other direction
 }
 
 void longPressCommand()
