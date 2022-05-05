@@ -18,6 +18,9 @@
 
 #define LONG_PRESS 1000
 
+#define LED_PIN1 19
+#define LED_PIN2 33
+
 AtomMotion Atom;
 ESP32Wiimote wiimote;
 Preferences preferences;
@@ -26,6 +29,7 @@ Preferences preferences;
 bool programButtonPressed = true;
 bool motorDirection = false;
 bool servoDirection = true;
+bool ledState = false;
 
 bool waitingButtonCommand = true;
 int runningProgram; // persisted in EEPROM (Flash)
@@ -36,6 +40,7 @@ Neotimer cycleTimer = Neotimer(1000);
 int wiiMotor1 = 0;
 int wiiMotor2 = 0;
 bool wiiButtonAIsPressed = false;
+bool wiiButtonBIsPressed = false;
 
 void parametrizedCyclingProgram(int servoAngle1, int servoAngle2)
 {
@@ -43,6 +48,7 @@ void parametrizedCyclingProgram(int servoAngle1, int servoAngle2)
     {
         servoDirection = !servoDirection;
         Serial.println("Servo direction toggled");
+        ledState =! ledState;
     }
 
     if (programButtonPressed)
@@ -67,6 +73,13 @@ void parametrizedCyclingProgram(int servoAngle1, int servoAngle2)
     Atom.SetServoAngle(2, servoAngle2-servoAngle);  // even servos goes the other direction
     Atom.SetServoAngle(3, servoAngle);
     Atom.SetServoAngle(4, servoAngle2-servoAngle);  // even servos goes the other direction
+
+    if (ledState) {
+        digitalWrite(LED_PIN1, HIGH);
+    } else {
+        digitalWrite(LED_PIN1, LOW);
+    }
+    digitalWrite(LED_PIN2, HIGH);
 }
 
 void program0Loop()
@@ -165,6 +178,15 @@ void program3WiimoteLoop()
         } else if (!(button & BUTTON_A)) {  // A released
             wiiButtonAIsPressed = false;
         }
+        // external LED lights
+        if ((button & BUTTON_B) && !wiiButtonBIsPressed)    // B just pressed
+        {
+            ledState = !ledState;
+            Serial.println("External LED toggled");
+            wiiButtonBIsPressed = true;
+        } else if (!(button & BUTTON_B)) {  // B released
+            wiiButtonBIsPressed = false;
+        }
     }
     Atom.SetMotorSpeed(1, 127 * wiiMotor1);
     Atom.SetMotorSpeed(2, 127 * wiiMotor2);
@@ -173,6 +195,15 @@ void program3WiimoteLoop()
     Atom.SetServoAngle(2, 180-servoAngle);  // even servos goes the other direction
     Atom.SetServoAngle(3, servoAngle);
     Atom.SetServoAngle(4, 180-servoAngle);  // even servos goes the other direction
+
+    if (ledState) {
+        digitalWrite(LED_PIN1, HIGH);
+        digitalWrite(LED_PIN2, HIGH);
+    } else {
+        digitalWrite(LED_PIN1, LOW);
+        digitalWrite(LED_PIN2, LOW);
+    }    
+
 }
 
 void longPressCommand()
@@ -191,6 +222,11 @@ void shortPressCommand()
 
 void setup()
 {
+    pinMode(LED_PIN1, OUTPUT);
+    pinMode(LED_PIN2, OUTPUT);
+    digitalWrite(LED_PIN1, LOW);
+    digitalWrite(LED_PIN2, LOW);
+
     preferences.begin("lego", false); 
     runningProgram = preferences.getInt("runningProgram", 0);
 

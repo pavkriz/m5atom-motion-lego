@@ -14,6 +14,8 @@ Switch program by long pressing the M5Atom button, current program is indicated 
 
 Last selected program number is stored in non-volatile memory in order to continue with the program after powerdown-powerup cycle.
 
+External LEDs (eg. modified LEGO lights) on PORT.B (GPIO33, steady or toggle by Button B) or PORT.C (GPIO19, blink or toggle by Button B).
+
 ## Wiimote controls
 
 Wiimote is expected to be held horizontaly, ie. Buttons 1 is leftwards and Button 2 is rightwards.
@@ -23,6 +25,7 @@ Wiimote is expected to be held horizontaly, ie. Buttons 1 is leftwards and Butto
 * Button 1 = left
 * Button 2 = right
 * Button A = toggle servo position (full cycle)
+* Button B = toggle LEDs on PORT.B and PORT.C
 
 All combinations of forward/reverse and left/right are supported, including "pirouette".
 
