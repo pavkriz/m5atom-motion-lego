@@ -30,9 +30,10 @@ bool programButtonPressed = true;
 bool motorDirection = false;
 bool servoDirection = true;
 bool ledState = false;
+bool pirouetteTurn = false;
 
 bool waitingButtonCommand = true;
-int runningProgram; // persisted in EEPROM (Flash)
+int runningProgram = 0; // persisted in EEPROM (Flash)
 boolean programStartedFlag = true;
 
 Neotimer cycleTimer = Neotimer(1000);
@@ -151,17 +152,29 @@ void program3WiimoteLoop()
                 Serial.println("Reverse");
             }
         }
-        else if (button & BUTTON_ONE) // pirouette left
+        else if (pirouetteTurn && (button & BUTTON_ONE)) // pirouette left
         {
             wiiMotor1 = -1;
             wiiMotor2 = 1;
             Serial.println("Pirouette left");
         }
-        else if (button & BUTTON_TWO) // pirouette right
+        else if (pirouetteTurn && (button & BUTTON_TWO)) // pirouette right
         {
             wiiMotor1 = 1;
             wiiMotor2 = -1;
             Serial.println("Pirouette right");
+        }
+        else if (!pirouetteTurn && (button & BUTTON_ONE)) // forward left instead of pirouette left
+        {
+            wiiMotor1 = 0;
+            wiiMotor2 = 1;
+            Serial.println("Forward left");
+        }
+        else if (!pirouetteTurn && (button & BUTTON_TWO)) // forward left instead of pirouette right
+        {
+            wiiMotor1 = 1;
+            wiiMotor2 = 0;
+            Serial.println("Forward right");
         }
         else
         {
