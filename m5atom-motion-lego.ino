@@ -36,7 +36,7 @@ bool waitingButtonCommand = true;
 int runningProgram = 0; // persisted in EEPROM (Flash)
 boolean programStartedFlag = true;
 
-Neotimer cycleTimer = Neotimer(1000);
+Neotimer cycleTimer = Neotimer(2000);
 
 int wiiMotor1 = 0;
 int wiiMotor2 = 0;
@@ -203,11 +203,12 @@ void program3WiimoteLoop()
     }
     Atom.SetMotorSpeed(1, 127 * wiiMotor1);
     Atom.SetMotorSpeed(2, 127 * wiiMotor2);
-    int servoAngle = servoDirection ? 180 : 0;
-    Atom.SetServoAngle(1, servoAngle);
-    Atom.SetServoAngle(2, 180-servoAngle);  // even servos goes the other direction
-    Atom.SetServoAngle(3, servoAngle);
-    Atom.SetServoAngle(4, 180-servoAngle);  // even servos goes the other direction
+    int servoAngle1 = servoDirection ? 90 : 0;  // 1 and 2 servos goes smaller angle
+    int servoAngle2 = servoDirection ? 180 : 0;  // 3 and 4 servos goes full angle
+    Atom.SetServoAngle(1, servoAngle1);
+    Atom.SetServoAngle(2, 90-servoAngle1);  // even servos goes the other direction
+    Atom.SetServoAngle(3, servoAngle2);
+    Atom.SetServoAngle(4, 180-servoAngle2);  // even servos goes the other direction
 
     if (ledState) {
         digitalWrite(LED_PIN1, HIGH);
